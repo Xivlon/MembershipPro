@@ -2,91 +2,82 @@
 
 ## Overview
 
-This is a full-stack web application for Luggsters, a travel luggage protection service. The application allows users to select and purchase membership plans with secure payment processing. Built as a monorepo with TypeScript throughout, it provides a seamless user experience for joining the Luggsters membership program.
+This is a full-stack web application for Luggsters, a travel luggage protection service. The application allows users to select and purchase membership plans with secure payment processing. Built as a modern React application with TypeScript and Express.js backend.
 
 ## System Architecture
 
 The application follows a monorepo structure with clear separation between client and server code:
 
-- **Frontend**: React 18 with TypeScript, using Vite for build tooling and hot module replacement
+- **Frontend**: React 18 with TypeScript, using Vite for build tooling and development
 - **Backend**: Express.js with TypeScript, serving both API endpoints and static files
 - **Database**: PostgreSQL with Drizzle ORM for type-safe database operations
 - **Styling**: Tailwind CSS with shadcn/ui components for consistent design system
 - **State Management**: TanStack Query for server state management and caching
 - **Routing**: Wouter for lightweight client-side routing
-- **Form Handling**: React Hook Form with Zod validation for type-safe forms
 
 ## Key Components
 
 ### Frontend Architecture
-- **React Components**: Modular component structure with reusable UI components
-- **UI Framework**: shadcn/ui components built on Radix UI primitives for accessibility
-- **Brand Identity**: Custom Luggsters logo component with animated elements
-- **Form Validation**: Zod schemas for both client and server-side validation
-- **Responsive Design**: Mobile-first approach with Tailwind CSS breakpoints
+- **Component Library**: shadcn/ui components built on Radix UI primitives for accessibility
+- **Form Handling**: React Hook Form with Zod validation for type-safe form management
+- **UI Framework**: Tailwind CSS with custom CSS variables for theming
+- **Build System**: Vite with React plugin and development error overlay
+- **Asset Management**: Static asset handling with path aliases
 
 ### Backend Architecture
-- **API Layer**: RESTful endpoints for membership plans and payment processing
-- **Storage Abstraction**: Interface-based storage layer supporting both in-memory and database implementations
-- **Database Layer**: Drizzle ORM with PostgreSQL adapter for production
-- **Development Mode**: Vite integration for seamless development experience
-- **Error Handling**: Centralized error handling with proper HTTP status codes
+- **API Layer**: RESTful Express.js endpoints with TypeScript
+- **Data Layer**: Drizzle ORM with PostgreSQL adapter (@neondatabase/serverless)
+- **Storage Abstraction**: Interface-based storage layer supporting multiple implementations
+- **Request Validation**: Zod schemas for API request/response validation
+- **Development Integration**: Vite middleware for hot module replacement
 
 ### Database Schema
-The database consists of three main tables:
-- **Users**: Basic user authentication with username/password
-- **Membership Plans**: Plan details including pricing, features, and validity periods
-- **Payments**: Payment records with cardholder information and transaction status
+The application uses three main database tables:
+- **users**: Basic user authentication (username/password)
+- **membership_plans**: Plan details including pricing, features, and validity periods
+- **payments**: Payment records with cardholder information and status tracking
 
 ## Data Flow
 
-1. **Plan Fetching**: Client requests available membership plans from `/api/membership-plans`
-2. **Plan Selection**: User selects either monthly ($9.99) or annual ($99.99) plan
-3. **Form Submission**: Payment form data is validated using Zod schemas
-4. **Payment Processing**: Server processes payment and stores transaction record
-5. **Success Handling**: Client displays success message and can redirect to dashboard
+1. **Plan Selection**: Client fetches available membership plans from `/api/membership-plans`
+2. **Plan Details**: Individual plan details retrieved via `/api/membership-plans/:id`
+3. **Payment Processing**: User submits payment form to `/api/payments` with validation
+4. **Form Validation**: Client-side validation using React Hook Form + Zod
+5. **Server Validation**: Server-side validation using shared Zod schemas
+6. **Storage**: Payment records stored with status tracking and audit trail
 
 ## External Dependencies
 
-### Core Dependencies
-- **@neondatabase/serverless**: Serverless PostgreSQL driver for database connectivity
-- **drizzle-orm**: Type-safe ORM for database operations with PostgreSQL
-- **@radix-ui/***: Collection of unstyled, accessible UI primitives
-- **@tanstack/react-query**: Powerful data synchronization for React applications
-- **react-hook-form**: Performant forms with easy validation
-- **zod**: TypeScript-first schema validation library
+### Core Infrastructure
+- **@neondatabase/serverless**: Serverless PostgreSQL driver for cloud database
+- **drizzle-orm**: Type-safe ORM with automatic migrations
+- **drizzle-kit**: Database management and migration tools
+
+### Frontend Libraries
+- **@radix-ui/***: Comprehensive collection of unstyled, accessible UI primitives
+- **@tanstack/react-query**: Powerful data synchronization for React
+- **@hookform/resolvers**: React Hook Form integration with validation libraries
+- **wouter**: Minimalist routing library for React
 
 ### Development Tools
-- **Vite**: Fast build tool with hot module replacement
-- **TypeScript**: Static type checking throughout the application
-- **Tailwind CSS**: Utility-first CSS framework
+- **@replit/vite-plugin-runtime-error-modal**: Development error handling
+- **@replit/vite-plugin-cartographer**: Replit-specific development features
 - **esbuild**: Fast JavaScript bundler for production builds
 
 ## Deployment Strategy
 
-The application is configured for deployment on Replit with the following setup:
+The application is configured for deployment with:
+- **Development**: `npm run dev` - Uses tsx for TypeScript execution with Vite middleware
+- **Production Build**: `npm run build` - Vite builds client assets, esbuild bundles server
+- **Production**: `npm run start` - Runs the bundled server with static file serving
+- **Database**: `npm run db:push` - Applies schema changes to database
 
-- **Build Process**: Vite builds the client-side assets, esbuild bundles the server
-- **Production Server**: Express.js serves both API endpoints and static files
-- **Database**: PostgreSQL 16 module with Drizzle migrations
-- **Port Configuration**: Server runs on port 5000, exposed as port 80
-- **Environment**: Node.js 20 runtime with web and PostgreSQL modules
-
-### Build Commands
-- `npm run dev`: Development server with hot reloading
-- `npm run build`: Production build for both client and server
-- `npm run start`: Production server startup
-- `npm run db:push`: Database schema migration
+The build process creates optimized client assets and a single bundled server file for efficient deployment.
 
 ## Changelog
 
-```
-Changelog:
 - June 27, 2025. Initial setup
-```
 
 ## User Preferences
 
-```
 Preferred communication style: Simple, everyday language.
-```
