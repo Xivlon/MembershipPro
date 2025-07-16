@@ -252,7 +252,7 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
               id="terms"
               checked={form.watch("terms")}
               onCheckedChange={(checked) => form.setValue("terms", !!checked)}
-              className="mt-1 h-4 w-4 bg-white border-2 border-slate-300 rounded data-[state=checked]:bg-white data-[state=checked]:border-slate-400"
+              className="mt-1 h-4 w-4 bg-white border-2 border-slate-300 rounded-sm data-[state=checked]:bg-white data-[state=checked]:border-slate-400"
             />
             <Label htmlFor="terms" className="text-sm text-slate-600 leading-relaxed cursor-pointer">
               I agree to the{" "}
