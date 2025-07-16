@@ -29,17 +29,6 @@ export const payments = pgTable("payments", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const userMemberships = pgTable("user_memberships", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull(),
-  planId: integer("plan_id").notNull(),
-  status: text("status").notNull().default("active"), // 'active' | 'cancelled' | 'expired'
-  startDate: timestamp("start_date").defaultNow(),
-  endDate: timestamp("end_date"),
-  stripeSubscriptionId: text("stripe_subscription_id"),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -57,18 +46,8 @@ export const insertPaymentSchema = createInsertSchema(payments).pick({
   terms: z.boolean().refine(val => val === true, "You must accept the terms and conditions"),
 });
 
-export const insertUserMembershipSchema = createInsertSchema(userMemberships).pick({
-  userId: true,
-  planId: true,
-  status: true,
-  endDate: true,
-  stripeSubscriptionId: true,
-});
-
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type MembershipPlan = typeof membershipPlans.$inferSelect;
 export type InsertPayment = z.infer<typeof insertPaymentSchema>;
 export type Payment = typeof payments.$inferSelect;
-export type UserMembership = typeof userMemberships.$inferSelect;
-export type InsertUserMembership = z.infer<typeof insertUserMembershipSchema>;
