@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { insertPaymentSchema, MembershipPlan } from "@shared/schema";
+import { insertPaymentSchema, type MembershipPlan } from "@shared/index";
 import { CreditCard, Shield, Lock, CheckCircle, Loader2 } from "lucide-react";
 import { z } from "zod";
 

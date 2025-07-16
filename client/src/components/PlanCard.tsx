@@ -1,7 +1,7 @@
 import { Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MembershipPlan } from "@shared/schema";
+import type { MembershipPlan } from "@shared/index";
 
 interface PlanCardProps {
   plan: MembershipPlan;

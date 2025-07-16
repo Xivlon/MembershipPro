@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import LuggstersLogo from "@/components/LuggstersLogo";
 import PlanCard from "@/components/PlanCard";
 import PaymentForm from "@/components/PaymentForm";
-import { MembershipPlan } from "@shared/schema";
+import type { MembershipPlan } from "@shared/index";
 
 export default function MembershipPage() {
   const [selectedPlan, setSelectedPlan] = useState<MembershipPlan | null>(null);
