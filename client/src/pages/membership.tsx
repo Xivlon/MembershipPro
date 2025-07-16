@@ -69,7 +69,7 @@ export default function MembershipPage() {
                     key={plan.id}
                     className={`p-6 rounded-lg border-2 cursor-pointer transition-all ${
                       selectedPlan?.id === plan.id
-                        ? 'border-amber-500 bg-amber-500/10'
+                        ? 'border-green-500 bg-green-500/10'
                         : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
                     }`}
                     onClick={() => handlePlanSelect(plan)}
@@ -85,7 +85,7 @@ export default function MembershipPage() {
                         </ul>
                       </div>
                       <div className="text-right">
-                        <span className="text-2xl font-bold text-amber-400">${plan.price}</span>
+                        <span className="text-2xl font-bold text-green-400">${plan.price}</span>
                         <p className="text-slate-400 text-sm">per {plan.type === 'monthly' ? 'month' : 'year'}</p>
                       </div>
                     </div>
