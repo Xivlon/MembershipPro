@@ -246,15 +246,16 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
             </div>
           </div>
 
-          {/* Terms */}
+          {/* Terms and Conditions */}
           <div className="flex items-start space-x-3">
-            <Checkbox
+            <input
+              type="checkbox"
               id="terms"
               checked={form.watch("terms")}
-              onCheckedChange={(checked) => form.setValue("terms", !!checked)}
-              className="mt-1 h-4 w-4 shrink-0 bg-white border-2 border-slate-300 rounded-sm hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 data-[state=checked]:bg-slate-600 data-[state=checked]:border-slate-600 data-[state=checked]:text-white"
+              onChange={(e) => form.setValue("terms", e.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-slate-300 text-slate-600 focus:ring-slate-500 focus:ring-2"
             />
-            <Label htmlFor="terms" className="text-sm text-slate-600 leading-relaxed cursor-pointer">
+            <label htmlFor="terms" className="text-sm text-slate-600 leading-relaxed cursor-pointer">
               I agree to the{" "}
               <span className="text-slate-600 hover:text-slate-800 underline cursor-pointer">
                 Terms of Service
@@ -263,17 +264,17 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
               <span className="text-slate-600 hover:text-slate-800 underline cursor-pointer">
                 Privacy Policy
               </span>
-            </Label>
+            </label>
           </div>
           {form.formState.errors.terms && (
-            <p className="text-red-500 text-sm">{form.formState.errors.terms.message}</p>
+            <p className="text-red-500 text-sm mt-1">{form.formState.errors.terms.message}</p>
           )}
 
-          {/* Submit Button */}
+          {/* Complete Payment Button */}
           <Button
             type="submit"
             disabled={paymentMutation.isPending || !selectedPlan}
-            className="w-full bg-slate-600 hover:bg-slate-700 text-white font-semibold py-4 h-auto rounded-lg"
+            className="w-full bg-slate-600 hover:bg-slate-700 text-white font-semibold py-3 text-base rounded-lg transition-colors"
           >
             {paymentMutation.isPending ? (
               <>
