@@ -126,22 +126,19 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
         <h3 className="text-2xl font-semibold text-slate-800 mb-6">Payment Details</h3>
         
         {/* Plan Summary */}
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-8">
-          <div className="flex justify-between items-center">
+        <div className="bg-slate-50 rounded-xl p-6 mb-8">
+          <div className="flex justify-between items-start">
             <div>
-              <h4 className="font-semibold text-slate-800">
+              <h4 className="font-semibold text-slate-700 text-lg">
                 {selectedPlan?.name || "Select a plan"}
               </h4>
-              <p className="text-slate-600 text-sm">
+              <p className="text-slate-500 text-sm mt-1">
                 {selectedPlan?.description || "Choose your membership plan first"}
               </p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-slate-800">
+              <div className="text-2xl font-bold text-green-600">
                 ${selectedPlan?.price || "0.00"}
-              </div>
-              <div className="text-slate-500 text-sm">
-                {selectedPlan?.type === 'monthly' ? 'per month' : selectedPlan?.type === 'annual' ? 'per year' : '-'}
               </div>
             </div>
           </div>
@@ -150,12 +147,12 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Card Number */}
           <div>
-            <Label htmlFor="cardNumber" className="text-slate-700 font-medium">Card Number</Label>
+            <Label htmlFor="cardNumber" className="text-slate-700 font-medium mb-2 block">Card Number</Label>
             <div className="relative">
               <Input
                 id="cardNumber"
                 placeholder="1234 5678 9012 3456"
-                className="pl-12 bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:ring-slate-500"
+                className="pl-12 bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:ring-slate-500 py-3"
                 {...form.register("cardNumber")}
                 onChange={(e) => {
                   const formatted = formatCardNumber(e.target.value);
@@ -172,12 +169,12 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
           {/* Expiry and CVV */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="expiryDate" className="text-slate-700 font-medium">Expiry Date</Label>
+              <Label htmlFor="expiryDate" className="text-slate-700 font-medium mb-2 block">Expiry Date</Label>
               <Input
                 id="expiryDate"
                 placeholder="MM/YY"
                 maxLength={5}
-                className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:ring-slate-500"
+                className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:ring-slate-500 py-3"
                 {...form.register("expiryDate")}
                 onChange={(e) => {
                   const formatted = formatExpiryDate(e.target.value);
@@ -189,12 +186,12 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
               )}
             </div>
             <div>
-              <Label htmlFor="cvv" className="text-slate-700 font-medium">CVV</Label>
+              <Label htmlFor="cvv" className="text-slate-700 font-medium mb-2 block">CVV</Label>
               <Input
                 id="cvv"
                 placeholder="123"
                 maxLength={4}
-                className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:ring-slate-500"
+                className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:ring-slate-500 py-3"
                 {...form.register("cvv")}
                 onChange={(e) => {
                   const value = e.target.value.replace(/[^0-9]/g, '');
@@ -209,11 +206,11 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
 
           {/* Cardholder Name */}
           <div>
-            <Label htmlFor="cardholderName" className="text-slate-700 font-medium">Cardholder Name</Label>
+            <Label htmlFor="cardholderName" className="text-slate-700 font-medium mb-2 block">Cardholder Name</Label>
             <Input
               id="cardholderName"
               placeholder="John Doe"
-              className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:ring-slate-500"
+              className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:ring-slate-500 py-3"
               {...form.register("cardholderName")}
             />
             {form.formState.errors.cardholderName && (
@@ -223,12 +220,12 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
 
           {/* Email */}
           <div>
-            <Label htmlFor="email" className="text-slate-700 font-medium">Email Address</Label>
+            <Label htmlFor="email" className="text-slate-700 font-medium mb-2 block">Email Address</Label>
             <Input
               id="email"
               type="email"
               placeholder="john@example.com"
-              className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:ring-slate-500"
+              className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:ring-slate-500 py-3"
               {...form.register("email")}
             />
             {form.formState.errors.email && (
@@ -237,13 +234,13 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
           </div>
 
           {/* Security Notice */}
-          <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 flex items-center space-x-3">
-            <Shield className="w-5 h-5 text-slate-600 flex-shrink-0" />
-            <div>
+          <div className="bg-slate-50 rounded-lg p-4 flex items-start space-x-3">
+            <Shield className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
               <p className="text-sm font-medium text-slate-800">Secure Payment</p>
               <p className="text-xs text-slate-600">Your payment information is encrypted and secure</p>
             </div>
-            <div className="flex items-center space-x-2 ml-auto">
+            <div className="flex items-center space-x-2">
               <Lock className="w-4 h-4 text-slate-500" />
               <span className="text-xs text-slate-500">SSL</span>
             </div>
@@ -275,7 +272,7 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
           <Button
             type="submit"
             disabled={paymentMutation.isPending || !selectedPlan}
-            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-4 h-auto"
+            className="w-full bg-slate-600 hover:bg-slate-700 text-white font-semibold py-4 h-auto rounded-lg"
           >
             {paymentMutation.isPending ? (
               <>
