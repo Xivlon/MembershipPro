@@ -253,7 +253,7 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
               id="terms"
               checked={form.watch("terms")}
               onChange={(e) => form.setValue("terms", e.target.checked)}
-              className="mt-1 h-4 w-4 rounded border-slate-300 text-slate-600 focus:ring-slate-500 focus:ring-2"
+              className="mt-1 h-4 w-4 rounded border-slate-300 text-green-600 focus:ring-green-500 focus:ring-2"
             />
             <label htmlFor="terms" className="text-sm text-slate-600 leading-relaxed cursor-pointer">
               I agree to the{" "}
@@ -274,7 +274,7 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
           <Button
             type="submit"
             disabled={paymentMutation.isPending || !selectedPlan}
-            className="w-full bg-slate-600 hover:bg-slate-700 text-white font-semibold py-3 text-base rounded-lg transition-colors"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 text-base rounded-lg transition-colors"
           >
             {paymentMutation.isPending ? (
               <>
