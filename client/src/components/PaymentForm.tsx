@@ -100,17 +100,17 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
 
   if (showSuccess) {
     return (
-      <Card>
+      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700">
         <CardContent className="p-8 text-center">
-          <div className="w-16 h-16 bg-luggsters-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="w-8 h-8 text-white" />
+          <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="w-8 h-8 text-slate-900" />
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 mb-4">Payment Successful!</h3>
-          <p className="text-slate-600 mb-6">
+          <h3 className="text-2xl font-bold text-white mb-4">Payment Successful!</h3>
+          <p className="text-slate-300 mb-6">
             Welcome to Luggsters! Your membership is now active and you're ready for worry-free travel.
           </p>
           <Button 
-            className="w-full bg-gradient-to-r from-luggsters-green-500 to-luggsters-green-600 hover:from-luggsters-green-600 hover:to-luggsters-green-700"
+            className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold"
             onClick={onPaymentSuccess}
           >
             Get Started
@@ -121,26 +121,26 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
   }
 
   return (
-    <Card>
+    <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700">
       <CardContent className="p-8">
-        <h3 className="text-2xl font-semibold text-slate-800 mb-6">Payment Details</h3>
+        <h3 className="text-2xl font-semibold text-white mb-6">Payment Details</h3>
         
         {/* Plan Summary */}
-        <div className="bg-slate-50 rounded-xl p-6 mb-8">
+        <div className="bg-slate-900/50 border border-slate-700 rounded-xl p-6 mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h4 className="font-semibold text-slate-800">
+              <h4 className="font-semibold text-white">
                 {selectedPlan?.name || "Select a plan"}
               </h4>
-              <p className="text-slate-600 text-sm">
+              <p className="text-slate-300 text-sm">
                 {selectedPlan?.description || "Choose your membership plan first"}
               </p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-luggsters-green-600">
+              <div className="text-2xl font-bold text-amber-400">
                 ${selectedPlan?.price || "0.00"}
               </div>
-              <div className="text-slate-500 text-sm">
+              <div className="text-slate-400 text-sm">
                 {selectedPlan?.type === 'monthly' ? 'per month' : selectedPlan?.type === 'annual' ? 'per year' : '-'}
               </div>
             </div>
@@ -233,15 +233,15 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
           </div>
 
           {/* Security Notice */}
-          <div className="bg-slate-50 rounded-lg p-4 flex items-center space-x-3">
-            <Shield className="w-5 h-5 text-luggsters-green-500 flex-shrink-0" />
+          <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-4 flex items-center space-x-3">
+            <Shield className="w-5 h-5 text-amber-400 flex-shrink-0" />
             <div>
-              <p className="text-sm font-medium text-slate-800">Secure Payment</p>
-              <p className="text-xs text-slate-600">Your payment information is encrypted and secure</p>
+              <p className="text-sm font-medium text-white">Secure Payment</p>
+              <p className="text-xs text-slate-300">Your payment information is encrypted and secure</p>
             </div>
             <div className="flex items-center space-x-2 ml-auto">
               <Lock className="w-4 h-4 text-slate-400" />
-              <span className="text-xs text-slate-500">SSL</span>
+              <span className="text-xs text-slate-400">SSL</span>
             </div>
           </div>
 
@@ -252,13 +252,13 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
               checked={form.watch("terms")}
               onCheckedChange={(checked) => form.setValue("terms", !!checked)}
             />
-            <Label htmlFor="terms" className="text-sm text-slate-600 leading-relaxed">
+            <Label htmlFor="terms" className="text-sm text-slate-300 leading-relaxed">
               I agree to the{" "}
-              <span className="text-luggsters-green-600 hover:text-luggsters-green-700 underline cursor-pointer">
+              <span className="text-amber-400 hover:text-amber-300 underline cursor-pointer">
                 Terms of Service
               </span>{" "}
               and{" "}
-              <span className="text-luggsters-green-600 hover:text-luggsters-green-700 underline cursor-pointer">
+              <span className="text-amber-400 hover:text-amber-300 underline cursor-pointer">
                 Privacy Policy
               </span>
             </Label>
@@ -271,7 +271,7 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
           <Button
             type="submit"
             disabled={paymentMutation.isPending || !selectedPlan}
-            className="w-full bg-gradient-to-r from-luggsters-green-500 to-luggsters-green-600 hover:from-luggsters-green-600 hover:to-luggsters-green-700 text-white font-semibold py-4 h-auto"
+            className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-semibold py-4 h-auto"
           >
             {paymentMutation.isPending ? (
               <>
@@ -285,19 +285,19 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
         </form>
 
         {/* Trust Badges */}
-        <div className="mt-8 pt-6 border-t border-slate-200">
+        <div className="mt-8 pt-6 border-t border-slate-700">
           <div className="flex justify-center items-center space-x-6 opacity-70">
             <div className="flex items-center space-x-2">
               <Shield className="w-4 h-4 text-slate-400" />
-              <span className="text-xs text-slate-500">256-bit SSL</span>
+              <span className="text-xs text-slate-400">256-bit SSL</span>
             </div>
             <div className="flex items-center space-x-2">
               <CreditCard className="w-4 h-4 text-slate-400" />
-              <span className="text-xs text-slate-500">Secure Processing</span>
+              <span className="text-xs text-slate-400">Secure Processing</span>
             </div>
             <div className="flex items-center space-x-2">
               <Lock className="w-4 h-4 text-slate-400" />
-              <span className="text-xs text-slate-500">PCI Compliant</span>
+              <span className="text-xs text-slate-400">PCI Compliant</span>
             </div>
           </div>
         </div>
