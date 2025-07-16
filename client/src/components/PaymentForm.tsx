@@ -279,6 +279,12 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
             type="submit"
             disabled={paymentMutation.isPending || !selectedPlan}
             className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 text-base rounded-lg transition-colors"
+            onClick={() => {
+              console.log('Payment button clicked');
+              console.log('Form errors:', form.formState.errors);
+              console.log('Form values:', form.getValues());
+              console.log('Form is valid:', form.formState.isValid);
+            }}
           >
             {paymentMutation.isPending ? (
               <>
