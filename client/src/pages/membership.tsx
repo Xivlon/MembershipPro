@@ -57,9 +57,9 @@ export default function MembershipPage() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-8 max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {/* Plan Selection Section */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-1 space-y-6">
             <h3 className="text-2xl font-semibold text-white mb-6">Select Your Plan</h3>
             
             <div className="space-y-4">
@@ -94,7 +94,7 @@ export default function MembershipPage() {
           </div>
 
           {/* Payment Form Section */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-2">
             <PaymentForm 
               selectedPlan={selectedPlan}
               onPaymentSuccess={handlePaymentSuccess}
