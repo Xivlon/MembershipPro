@@ -252,8 +252,9 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
               id="terms"
               checked={form.watch("terms")}
               onCheckedChange={(checked) => form.setValue("terms", !!checked)}
+              className="mt-1"
             />
-            <Label htmlFor="terms" className="text-sm text-slate-700 leading-relaxed">
+            <Label htmlFor="terms" className="text-sm text-slate-700 leading-relaxed cursor-pointer">
               I agree to the{" "}
               <span className="text-slate-600 hover:text-slate-800 underline cursor-pointer">
                 Terms of Service
