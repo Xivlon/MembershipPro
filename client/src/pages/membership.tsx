@@ -48,21 +48,21 @@ export default function MembershipPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Page Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-white mb-4">Complete Your Membership</h2>
           <p className="text-xl text-slate-300 max-w-2xl mx-auto">
             Choose your plan and enter your payment details to start your worry-free travel journey
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 max-w-7xl mx-auto">
           {/* Plan Selection Section */}
-          <div className="lg:col-span-1 space-y-6">
-            <h3 className="text-2xl font-semibold text-white mb-6">Select Your Plan</h3>
+          <div className="space-y-6">
+            <h3 className="text-2xl font-semibold text-white mb-8">Select Your Plan</h3>
             
-            <div className="space-y-4">
+            <div className="space-y-6">
               {plans.map((plan, index) => (
                 <div
                   key={plan.id}
@@ -94,11 +94,13 @@ export default function MembershipPage() {
           </div>
 
           {/* Payment Form Section */}
-          <div className="lg:col-span-2">
-            <PaymentForm 
-              selectedPlan={selectedPlan}
-              onPaymentSuccess={handlePaymentSuccess}
-            />
+          <div className="flex items-start">
+            <div className="w-full">
+              <PaymentForm 
+                selectedPlan={selectedPlan}
+                onPaymentSuccess={handlePaymentSuccess}
+              />
+            </div>
           </div>
         </div>
       </main>
