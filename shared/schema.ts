@@ -36,10 +36,10 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export const insertPaymentSchema = createInsertSchema(payments).pick({
   planId: true,
-  amount: true,
   cardholderName: true,
   email: true,
 }).extend({
+  amount: z.number().positive(),
   cardNumber: z.string().min(16).max(19),
   expiryDate: z.string().regex(/^\d{2}\/\d{2}$/),
   cvv: z.string().min(3).max(4),
