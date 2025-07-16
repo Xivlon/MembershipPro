@@ -28,7 +28,7 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
     resolver: zodResolver(insertPaymentSchema),
     defaultValues: {
       planId: selectedPlan?.id || 0,
-      amount: selectedPlan?.price || "0",
+      amount: selectedPlan ? parseFloat(selectedPlan.price) : 0,
       cardholderName: "",
       email: "",
       cardNumber: "",
@@ -79,6 +79,9 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
   };
 
   const onSubmit = (data: PaymentData) => {
+    console.log('Form submitted with data:', data);
+    console.log('Selected plan:', selectedPlan);
+    
     if (!selectedPlan) {
       toast({
         title: "No Plan Selected",
@@ -92,9 +95,10 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
     const paymentData = {
       ...data,
       planId: selectedPlan.id,
-      amount: selectedPlan.price,
+      amount: parseFloat(selectedPlan.price),
     };
 
+    console.log('Submitting payment data:', paymentData);
     paymentMutation.mutate(paymentData);
   };
 
