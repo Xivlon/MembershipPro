@@ -57,26 +57,44 @@ export default function MembershipPage() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-5 gap-8 max-w-7xl mx-auto">
           {/* Plan Selection Section */}
-          <div className="space-y-6">
+          <div className="lg:col-span-2 space-y-6">
             <h3 className="text-2xl font-semibold text-white mb-6">Select Your Plan</h3>
             
-            <div className="space-y-6">
+            <div className="space-y-4">
               {plans.map((plan, index) => (
-                <PlanCard
+                <div
                   key={plan.id}
-                  plan={plan}
-                  isSelected={selectedPlan?.id === plan.id}
-                  onSelect={handlePlanSelect}
-                  isPopular={plan.type === 'annual'}
-                />
+                  className={`p-6 rounded-lg border-2 cursor-pointer transition-all ${
+                    selectedPlan?.id === plan.id
+                      ? 'border-amber-500 bg-amber-500/10'
+                      : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
+                  }`}
+                  onClick={() => handlePlanSelect(plan)}
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="text-lg font-semibold text-white">{plan.name}</h4>
+                      <p className="text-slate-400 text-sm mt-1">{plan.description}</p>
+                      <ul className="text-sm text-slate-300 mt-3 space-y-1">
+                        {plan.features.slice(0, 3).map((feature, idx) => (
+                          <li key={idx}>• {feature}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-2xl font-bold text-amber-400">${plan.price}</span>
+                      <p className="text-slate-400 text-sm">per {plan.type === 'monthly' ? 'month' : 'year'}</p>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
 
           {/* Payment Form Section */}
-          <div>
+          <div className="lg:col-span-3">
             <PaymentForm 
               selectedPlan={selectedPlan}
               onPaymentSuccess={handlePaymentSuccess}
