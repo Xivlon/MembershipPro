@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -37,6 +37,14 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
       terms: false,
     },
   });
+
+  // Update form values when selectedPlan changes
+  useEffect(() => {
+    if (selectedPlan) {
+      form.setValue("planId", selectedPlan.id);
+      form.setValue("amount", parseFloat(selectedPlan.price));
+    }
+  }, [selectedPlan, form]);
 
   const paymentMutation = useMutation({
     mutationFn: async (data: PaymentData) => {
