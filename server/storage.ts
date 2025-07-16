@@ -1,4 +1,4 @@
-import { users, membershipPlans, payments, type User, type InsertUser, type MembershipPlan, type Payment, type InsertPayment } from "@shared/index";
+import { users, membershipPlans, payments, userMemberships, type User, type InsertUser, type MembershipPlan, type Payment, type InsertPayment, type UserMembership, type InsertUserMembership } from "@shared/index";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -8,23 +8,31 @@ export interface IStorage {
   getMembershipPlan(id: number): Promise<MembershipPlan | undefined>;
   createPayment(payment: Omit<InsertPayment, 'cardNumber' | 'expiryDate' | 'cvv' | 'terms'> & { status?: string }): Promise<Payment>;
   getPayment(id: number): Promise<Payment | undefined>;
+  createUserMembership(membership: Omit<InsertUserMembership, 'id' | 'createdAt'>): Promise<UserMembership>;
+  getUserMembership(userId: number): Promise<UserMembership | undefined>;
+  updateUserMembership(id: number, updates: Partial<UserMembership>): Promise<UserMembership>;
+  getUserMembershipByEmail(email: string): Promise<UserMembership | undefined>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private membershipPlans: Map<number, MembershipPlan>;
   private payments: Map<number, Payment>;
+  private userMemberships: Map<number, UserMembership>;
   private currentUserId: number;
   private currentPlanId: number;
   private currentPaymentId: number;
+  private currentMembershipId: number;
 
   constructor() {
     this.users = new Map();
     this.membershipPlans = new Map();
     this.payments = new Map();
+    this.userMemberships = new Map();
     this.currentUserId = 1;
     this.currentPlanId = 1;
     this.currentPaymentId = 1;
+    this.currentMembershipId = 1;
 
     // Initialize membership plans
     this.initializePlans();
@@ -95,6 +103,45 @@ export class MemStorage implements IStorage {
 
   async getPayment(id: number): Promise<Payment | undefined> {
     return this.payments.get(id);
+  }
+
+  async createUserMembership(membership: Omit<InsertUserMembership, 'id' | 'createdAt'>): Promise<UserMembership> {
+    const id = this.currentMembershipId++;
+    const newMembership: UserMembership = {
+      ...membership,
+      id,
+      startDate: new Date(),
+      createdAt: new Date(),
+    };
+    this.userMemberships.set(id, newMembership);
+    return newMembership;
+  }
+
+  async getUserMembership(userId: number): Promise<UserMembership | undefined> {
+    return Array.from(this.userMemberships.values()).find(
+      (membership) => membership.userId === userId && membership.status === "active"
+    );
+  }
+
+  async updateUserMembership(id: number, updates: Partial<UserMembership>): Promise<UserMembership> {
+    const existing = this.userMemberships.get(id);
+    if (!existing) {
+      throw new Error("Membership not found");
+    }
+    const updated = { ...existing, ...updates };
+    this.userMemberships.set(id, updated);
+    return updated;
+  }
+
+  async getUserMembershipByEmail(email: string): Promise<UserMembership | undefined> {
+    // Find payment with this email first
+    const payment = Array.from(this.payments.values()).find(p => p.email === email);
+    if (!payment) return undefined;
+    
+    // Find membership for this payment
+    return Array.from(this.userMemberships.values()).find(
+      (membership) => membership.planId === payment.planId && membership.status === "active"
+    );
   }
 }
 

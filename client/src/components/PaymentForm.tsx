@@ -113,12 +113,20 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
           <p className="text-slate-600 mb-6">
             Welcome to Luggsters! Your membership is now active and you're ready for worry-free travel.
           </p>
-          <Button 
-            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold"
-            onClick={onPaymentSuccess}
-          >
-            Get Started
-          </Button>
+          <div className="space-y-3">
+            <Button 
+              className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold"
+              onClick={onPaymentSuccess}
+            >
+              Get Started
+            </Button>
+            <Button 
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold"
+              onClick={() => window.location.href = '/dashboard'}
+            >
+              Access Dashboard
+            </Button>
+          </div>
         </CardContent>
       </Card>
     );

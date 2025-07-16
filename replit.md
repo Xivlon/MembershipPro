@@ -32,10 +32,11 @@ The application follows a monorepo structure with clear separation between clien
 - **Development Integration**: Vite middleware for hot module replacement
 
 ### Database Schema
-The application uses three main database tables:
+The application uses four main database tables:
 - **users**: Basic user authentication (username/password)
 - **membership_plans**: Plan details including pricing, features, and validity periods
 - **payments**: Payment records with cardholder information and status tracking
+- **user_memberships**: Active membership records with plan associations and expiration dates
 
 ## Data Flow
 
@@ -45,6 +46,8 @@ The application uses three main database tables:
 4. **Form Validation**: Client-side validation using React Hook Form + Zod
 5. **Server Validation**: Server-side validation using shared Zod schemas
 6. **Storage**: Payment records stored with status tracking and audit trail
+7. **Membership Management**: User memberships created and managed with plan associations
+8. **Plan Changes**: Upgrade/downgrade functionality with prorated billing calculations
 
 ## External Dependencies
 
@@ -76,6 +79,7 @@ The build process creates optimized client assets and a single bundled server fi
 
 ## Changelog
 
+- July 16, 2025. Added plan upgrade/downgrade functionality with member dashboard
 - June 27, 2025. Initial setup
 
 ## User Preferences
