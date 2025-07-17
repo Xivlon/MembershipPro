@@ -86,3 +86,12 @@ The build process creates optimized client assets and a single bundled server fi
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+
+## Deployment Notes
+
+### Cloudflare Deployment Issue
+If subscription options don't appear on Cloudflare deployment:
+1. Check that STRIPE_SECRET_KEY environment variable is set in production
+2. Visit `/api/health` to verify Stripe configuration
+3. Check browser console for API errors
+4. See DEPLOYMENT_TROUBLESHOOTING.md for detailed steps

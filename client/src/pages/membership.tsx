@@ -8,7 +8,7 @@ import type { MembershipPlan } from "@shared/index";
 export default function MembershipPage() {
   const [selectedPlan, setSelectedPlan] = useState<MembershipPlan | null>(null);
 
-  const { data: plans = [], isLoading } = useQuery<MembershipPlan[]>({
+  const { data: plans = [], isLoading, error } = useQuery<MembershipPlan[]>({
     queryKey: ["/api/membership-plans"],
   });
 
@@ -25,6 +25,22 @@ export default function MembershipPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-xl">Error loading plans: {error.message}</div>
+      </div>
+    );
+  }
+
+  if (!plans || plans.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-xl">No membership plans available</div>
       </div>
     );
   }

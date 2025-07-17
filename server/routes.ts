@@ -5,11 +5,23 @@ import { insertPaymentSchema } from "@shared/schema";
 import { z } from "zod";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-12-18.acacia",
-});
+const stripe = process.env.STRIPE_SECRET_KEY 
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2024-12-18.acacia",
+    })
+  : null;
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint
+  app.get("/api/health", (req, res) => {
+    res.json({ 
+      status: "ok",
+      environment: process.env.NODE_ENV,
+      stripe_configured: !!stripe,
+      timestamp: new Date().toISOString()
+    });
+  });
+
   // Get membership plans
   app.get("/api/membership-plans", async (req, res) => {
     try {
@@ -42,6 +54,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Process subscription payment
   app.post("/api/payments", async (req, res) => {
     try {
+      // Check if Stripe is available
+      if (!stripe) {
+        return res.status(500).json({ 
+          message: "Payment processing is not configured. Please contact support.",
+          error: "STRIPE_SECRET_KEY not found"
+        });
+      }
+
       // Validate request body
       const validationResult = insertPaymentSchema.safeParse(req.body);
       if (!validationResult.success) {
@@ -231,6 +251,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Stripe webhook endpoint for subscription events
   app.post("/api/webhook", async (req, res) => {
+    if (!stripe) {
+      return res.status(500).json({ message: "Stripe not configured" });
+    }
+
     const sig = req.headers['stripe-signature'];
     let event;
 
