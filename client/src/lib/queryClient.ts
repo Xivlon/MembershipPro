@@ -2,7 +2,12 @@ import { QueryClient, type QueryFunction } from "@tanstack/react-query";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
-    const text = (await res.text()) || res.statusText;
+    let text = res.statusText;
+    try {
+      text = await res.text();
+    } catch (e) {
+      // If we can't read the response text, use statusText
+    }
     throw new Error(`${res.status}: ${text}`);
   }
 }
@@ -37,14 +42,21 @@ export const getQueryFn: <T>(options: {
       return null;
     }
 
-    await throwIfResNotOk(res);
+    if (!res.ok) {
+      let text = res.statusText;
+      try {
+        text = await res.text();
+      } catch (e) {
+        // If we can't read the response text, use statusText
+      }
+      throw new Error(`${res.status}: ${text}`);
+    }
     
     // Add better error handling for JSON parsing
     try {
       return await res.json();
     } catch (error) {
-      const text = await res.text();
-      throw new Error(`JSON.parse error: Response was not valid JSON. Response: ${text.substring(0, 200)}...`);
+      throw new Error(`JSON.parse error: Response was not valid JSON. Status: ${res.status}`);
     }
   };
 
