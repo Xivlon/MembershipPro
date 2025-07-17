@@ -24,8 +24,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Get membership plans
   app.get("/api/membership-plans", async (req, res) => {
+    console.log("=== API ROUTE HIT: /api/membership-plans ===");
     try {
       const plans = await storage.getMembershipPlans();
+      console.log("Successfully fetched plans:", plans.length);
       res.json(plans);
     } catch (error) {
       console.error("Error fetching membership plans:", error);

@@ -11,6 +11,11 @@ app.use((req, res, next) => {
   const path = req.path;
   let capturedJsonResponse: Record<string, any> | undefined = undefined;
 
+  // Log all API requests
+  if (path.startsWith("/api")) {
+    console.log(`🔍 API Request: ${req.method} ${path} - Headers:`, req.headers.accept);
+  }
+
   const originalResJson = res.json;
   res.json = function (bodyJson, ...args) {
     capturedJsonResponse = bodyJson;
@@ -45,6 +50,12 @@ app.use((req, res, next) => {
 
     res.status(status).json({ message });
     throw err;
+  });
+
+  // Add explicit API route protection before Vite
+  app.use("/api/*", (req, res, next) => {
+    console.log(`⚠️  API route ${req.path} fell through to fallback handler`);
+    res.status(404).json({ error: "API endpoint not found", path: req.path });
   });
 
   // importantly only setup vite in development and after
