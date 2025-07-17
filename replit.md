@@ -35,16 +35,20 @@ The application follows a monorepo structure with clear separation between clien
 The application uses three main database tables:
 - **users**: Basic user authentication (username/password)
 - **membership_plans**: Plan details including pricing, features, and validity periods
-- **payments**: Payment records with cardholder information and status tracking
+- **payments**: Payment records with cardholder information, subscription tracking, and status
+  - Added `stripeSubscriptionId` and `stripeCustomerId` fields for subscription management
+  - Status values: 'pending', 'active', 'cancelled', 'failed'
 
 ## Data Flow
 
 1. **Plan Selection**: Client fetches available membership plans from `/api/membership-plans`
 2. **Plan Details**: Individual plan details retrieved via `/api/membership-plans/:id`
-3. **Payment Processing**: User submits payment form to `/api/payments` with validation
+3. **Subscription Processing**: User submits payment form to `/api/payments` with validation
 4. **Form Validation**: Client-side validation using React Hook Form + Zod
 5. **Server Validation**: Server-side validation using shared Zod schemas
-6. **Storage**: Payment records stored with status tracking and audit trail
+6. **Stripe Integration**: Creates customers, products, prices, and subscriptions
+7. **Storage**: Payment records stored with subscription IDs and status tracking
+8. **Webhook Handling**: `/api/webhook` endpoint processes subscription events
 
 ## External Dependencies
 
@@ -76,6 +80,7 @@ The build process creates optimized client assets and a single bundled server fi
 
 ## Changelog
 
+- July 17, 2025. Converted to subscription-based payment system with Stripe
 - June 27, 2025. Initial setup
 
 ## User Preferences

@@ -54,8 +54,8 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
     onSuccess: (data) => {
       setShowSuccess(true);
       toast({
-        title: "Payment Successful!",
-        description: "Welcome to Luggsters! Your membership is now active.",
+        title: "Subscription Activated!",
+        description: "Welcome to Luggsters! Your subscription is now active and will auto-renew.",
       });
       setTimeout(() => {
         onPaymentSuccess();
@@ -117,9 +117,9 @@ export default function PaymentForm({ selectedPlan, onPaymentSuccess }: PaymentF
           <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-8 h-8 text-white" />
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 mb-4">Payment Successful!</h3>
+          <h3 className="text-2xl font-bold text-slate-800 mb-4">Subscription Activated!</h3>
           <p className="text-slate-600 mb-6">
-            Welcome to Luggsters! Your membership is now active and you're ready for worry-free travel.
+            Welcome to Luggsters! Your subscription is now active and will automatically renew. You're all set for worry-free travel protection.
           </p>
           <Button 
             className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold"

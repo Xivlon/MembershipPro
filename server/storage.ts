@@ -6,7 +6,7 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   getMembershipPlans(): Promise<MembershipPlan[]>;
   getMembershipPlan(id: number): Promise<MembershipPlan | undefined>;
-  createPayment(payment: Omit<InsertPayment, 'cardNumber' | 'expiryDate' | 'cvv' | 'terms'> & { status?: string }): Promise<Payment>;
+  createPayment(payment: Omit<InsertPayment, 'cardNumber' | 'expiryDate' | 'cvv' | 'terms'> & { status?: string; stripeSubscriptionId?: string; stripeCustomerId?: string }): Promise<Payment>;
   getPayment(id: number): Promise<Payment | undefined>;
 }
 
@@ -80,13 +80,15 @@ export class MemStorage implements IStorage {
     return this.membershipPlans.get(id);
   }
 
-  async createPayment(payment: Omit<InsertPayment, 'cardNumber' | 'expiryDate' | 'cvv' | 'terms'> & { status?: string }): Promise<Payment> {
+  async createPayment(payment: Omit<InsertPayment, 'cardNumber' | 'expiryDate' | 'cvv' | 'terms'> & { status?: string; stripeSubscriptionId?: string; stripeCustomerId?: string }): Promise<Payment> {
     const id = this.currentPaymentId++;
     const newPayment: Payment = {
       ...payment,
       id,
       userId: null,
       status: payment.status || "pending",
+      stripeSubscriptionId: payment.stripeSubscriptionId || null,
+      stripeCustomerId: payment.stripeCustomerId || null,
       createdAt: new Date(),
     };
     this.payments.set(id, newPayment);

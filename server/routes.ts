@@ -39,7 +39,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Process payment
+  // Process subscription payment
   app.post("/api/payments", async (req, res) => {
     try {
       // Validate request body
@@ -65,29 +65,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Selected plan not found" });
       }
 
-      // Create Stripe payment intent
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(paymentData.amount * 100), // Convert to cents
-        currency: 'usd',
-        automatic_payment_methods: {
-          enabled: true,
-        },
-        metadata: {
-          planId: paymentData.planId.toString(),
+      // Create or retrieve customer
+      let customer;
+      try {
+        const existingCustomers = await stripe.customers.list({
           email: paymentData.email,
-          cardholderName: paymentData.cardholderName,
-        },
+          limit: 1,
+        });
+        
+        if (existingCustomers.data.length > 0) {
+          customer = existingCustomers.data[0];
+        } else {
+          customer = await stripe.customers.create({
+            email: paymentData.email,
+            name: paymentData.cardholderName,
+          });
+        }
+      } catch (customerError) {
+        console.error("Customer creation error:", customerError);
+        return res.status(400).json({ message: "Failed to create customer" });
+      }
+
+      // Create Stripe product and price for subscription
+      const product = await stripe.products.create({
+        name: plan.name,
+        description: plan.description,
       });
 
-      // For demo purposes, we'll simulate card processing
-      // In a real app, you'd handle the payment intent on the frontend with Stripe Elements
-      const isPaymentSuccessful = Math.random() > 0.1; // 90% success rate for demo
+      const price = await stripe.prices.create({
+        unit_amount: Math.round(paymentData.amount * 100), // Convert to cents
+        currency: 'usd',
+        recurring: {
+          interval: plan.type === 'monthly' ? 'month' : 'year',
+        },
+        product: product.id,
+      });
 
-      if (!isPaymentSuccessful) {
-        return res.status(400).json({ 
-          message: "Payment failed. Please check your card details and try again." 
-        });
-      }
+      // Create subscription
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{ price: price.id }],
+        payment_behavior: 'default_incomplete',
+        payment_settings: { save_default_payment_method: 'on_subscription' },
+        expand: ['latest_invoice.payment_intent'],
+      });
 
       // Create payment record (excluding sensitive card data)
       const payment = await storage.createPayment({
@@ -95,7 +116,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         amount: paymentForStorage.amount,
         cardholderName: paymentData.cardholderName,
         email: paymentData.email,
-        status: "completed"
+        status: "active",
+        stripeSubscriptionId: subscription.id,
+        stripeCustomerId: customer.id
       });
 
       res.json({
@@ -106,27 +129,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
           amount: payment.amount,
           status: payment.status,
           createdAt: payment.createdAt,
-          stripePaymentIntentId: paymentIntent.id
+          stripeSubscriptionId: subscription.id,
+          stripeCustomerId: customer.id
         },
         plan: {
           name: plan.name,
           type: plan.type,
           validityDays: plan.validityDays
+        },
+        subscription: {
+          id: subscription.id,
+          status: subscription.status,
+          clientSecret: subscription.latest_invoice.payment_intent.client_secret
         }
       });
     } catch (error) {
-      console.error("Payment processing error:", error);
+      console.error("Subscription processing error:", error);
       if (error instanceof Stripe.errors.StripeError) {
         return res.status(400).json({ 
-          message: `Payment failed: ${error.message}` 
+          message: `Subscription failed: ${error.message}` 
         });
       }
-      res.status(500).json({ message: "Payment processing failed. Please try again." });
+      res.status(500).json({ message: "Subscription processing failed. Please try again." });
     }
   });
 
-  // Create payment intent for Stripe
-  app.post("/api/create-payment-intent", async (req, res) => {
+  // Create subscription for Stripe
+  app.post("/api/create-subscription", async (req, res) => {
     try {
       const { planId, email, cardholderName } = req.body;
       
@@ -136,35 +165,105 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Selected plan not found" });
       }
 
-      // Create Stripe payment intent
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(plan.price * 100), // Convert to cents
-        currency: 'usd',
-        automatic_payment_methods: {
-          enabled: true,
-        },
-        metadata: {
-          planId: planId.toString(),
+      // Create or retrieve customer
+      let customer;
+      try {
+        const existingCustomers = await stripe.customers.list({
           email: email,
-          cardholderName: cardholderName,
+          limit: 1,
+        });
+        
+        if (existingCustomers.data.length > 0) {
+          customer = existingCustomers.data[0];
+        } else {
+          customer = await stripe.customers.create({
+            email: email,
+            name: cardholderName,
+          });
+        }
+      } catch (customerError) {
+        console.error("Customer creation error:", customerError);
+        return res.status(400).json({ message: "Failed to create customer" });
+      }
+
+      // Create Stripe product and price for subscription
+      const product = await stripe.products.create({
+        name: plan.name,
+        description: plan.description,
+      });
+
+      const price = await stripe.prices.create({
+        unit_amount: Math.round(parseFloat(plan.price) * 100), // Convert to cents
+        currency: 'usd',
+        recurring: {
+          interval: plan.type === 'monthly' ? 'month' : 'year',
         },
+        product: product.id,
+      });
+
+      // Create subscription
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{ price: price.id }],
+        payment_behavior: 'default_incomplete',
+        payment_settings: { save_default_payment_method: 'on_subscription' },
+        expand: ['latest_invoice.payment_intent'],
       });
 
       res.json({
-        clientSecret: paymentIntent.client_secret,
-        paymentIntentId: paymentIntent.id,
+        subscriptionId: subscription.id,
+        clientSecret: subscription.latest_invoice.payment_intent.client_secret,
+        customerId: customer.id,
+        priceId: price.id,
         amount: plan.price,
         planName: plan.name
       });
     } catch (error) {
-      console.error("Payment intent creation error:", error);
+      console.error("Subscription creation error:", error);
       if (error instanceof Stripe.errors.StripeError) {
         return res.status(400).json({ 
-          message: `Payment intent creation failed: ${error.message}` 
+          message: `Subscription creation failed: ${error.message}` 
         });
       }
-      res.status(500).json({ message: "Payment intent creation failed. Please try again." });
+      res.status(500).json({ message: "Subscription creation failed. Please try again." });
     }
+  });
+
+  // Stripe webhook endpoint for subscription events
+  app.post("/api/webhook", async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+    } catch (err) {
+      console.log(`Webhook signature verification failed.`, err.message);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle the event
+    switch (event.type) {
+      case 'customer.subscription.created':
+        console.log('Subscription created:', event.data.object);
+        break;
+      case 'customer.subscription.updated':
+        console.log('Subscription updated:', event.data.object);
+        break;
+      case 'customer.subscription.deleted':
+        console.log('Subscription cancelled:', event.data.object);
+        // Update payment status to cancelled
+        break;
+      case 'invoice.payment_succeeded':
+        console.log('Payment succeeded:', event.data.object);
+        break;
+      case 'invoice.payment_failed':
+        console.log('Payment failed:', event.data.object);
+        break;
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+
+    res.json({ received: true });
   });
 
   // Get payment status

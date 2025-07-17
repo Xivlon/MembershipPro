@@ -25,7 +25,9 @@ export const payments = pgTable("payments", {
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
   cardholderName: text("cardholder_name").notNull(),
   email: text("email").notNull(),
-  status: text("status").notNull().default("pending"), // 'pending' | 'completed' | 'failed'
+  status: text("status").notNull().default("pending"), // 'pending' | 'active' | 'cancelled' | 'failed'
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  stripeCustomerId: text("stripe_customer_id"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
