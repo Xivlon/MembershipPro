@@ -36,6 +36,10 @@ export const getQueryFn: <T>(options: {
   async ({ queryKey }) => {
     const res = await fetch(queryKey[0] as string, {
       credentials: "include",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
@@ -52,11 +56,21 @@ export const getQueryFn: <T>(options: {
       throw new Error(`${res.status}: ${text}`);
     }
     
+    // Clone the response before trying to parse JSON
+    const responseClone = res.clone();
+    
     // Add better error handling for JSON parsing
     try {
       return await res.json();
     } catch (error) {
-      throw new Error(`JSON.parse error: Response was not valid JSON. Status: ${res.status}`);
+      // Get the response text for debugging
+      let responseText = '';
+      try {
+        responseText = await responseClone.text();
+      } catch (e) {
+        responseText = 'Could not read response text';
+      }
+      throw new Error(`JSON.parse error: Response was not valid JSON. Status: ${res.status}. Response: ${responseText.substring(0, 200)}...`);
     }
   };
 
