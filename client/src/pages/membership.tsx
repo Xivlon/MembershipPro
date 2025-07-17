@@ -32,7 +32,23 @@ export default function MembershipPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <div className="text-white text-xl">Error loading plans: {error.message}</div>
+        <div className="text-white max-w-2xl p-8 text-center">
+          <h2 className="text-2xl font-bold mb-4">Unable to Load Subscription Plans</h2>
+          <div className="bg-red-900/20 border border-red-500 rounded-lg p-4 mb-6">
+            <p className="text-red-300 text-sm mb-2">Error: {error.message}</p>
+            <p className="text-slate-400 text-xs">
+              This usually means the API is not responding correctly in production.
+            </p>
+          </div>
+          <div className="text-slate-300 text-sm">
+            <p className="mb-2">Troubleshooting steps:</p>
+            <ul className="text-left space-y-1">
+              <li>• Check if STRIPE_SECRET_KEY is set in environment variables</li>
+              <li>• Visit /api/health to verify server status</li>
+              <li>• Contact support if the issue persists</li>
+            </ul>
+          </div>
+        </div>
       </div>
     );
   }

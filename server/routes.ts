@@ -28,7 +28,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const plans = await storage.getMembershipPlans();
       res.json(plans);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch membership plans" });
+      console.error("Error fetching membership plans:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch membership plans",
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
     }
   });
 

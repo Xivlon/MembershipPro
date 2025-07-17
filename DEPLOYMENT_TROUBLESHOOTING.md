@@ -41,6 +41,24 @@ curl -X GET https://your-domain.com/api/health
 - `/api/health` should return: `{"status":"ok","environment":"production","stripe_configured":true,"timestamp":"..."}`
 - `/api/membership-plans` should return an array of membership plans
 
+### Common Error Messages and Solutions
+
+#### "JSON.parse: unexpected character at line 1 column 1"
+This means the API endpoint is returning HTML instead of JSON, which indicates:
+1. **API routes not configured**: The server is serving the frontend HTML for API requests
+2. **Missing environment variables**: The server failed to start properly due to missing config
+3. **Build issues**: The production build didn't include the API routes correctly
+
+**Solution**: 
+- Verify the build includes both client and server components
+- Check that API routes are registered before static file serving
+- Ensure all environment variables are set in production
+
+#### "Failed to fetch" or Network Errors
+- Check CORS configuration if deploying to a different domain
+- Verify the production server is running on the correct port
+- Ensure firewall/security settings allow API requests
+
 ### If Problems Persist
 1. Check that the build process completed successfully
 2. Verify that the `dist` folder contains both the client assets and the server bundle
